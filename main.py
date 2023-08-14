@@ -1,11 +1,8 @@
 import pyodbc
-direccion_servidor = '127.0.0.1'
-nombre_bd = 'fut_usm'
 
 try:
-    conexion = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=' +
-                              direccion_servidor+';DATABASE='+nombre_bd)
-    # OK! conexión exitosa
+    conexion = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-3H6HKSS\SQLEXPRESS;DATABASE=fut_usm')
+    print("Conexión exitosa a SQL Server")
+    
 except Exception as e:
-    # Atrapar error
     print("Ocurrió un error al conectar a SQL Server: ", e)
