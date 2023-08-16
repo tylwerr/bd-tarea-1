@@ -80,7 +80,7 @@ def insertar_datos(conexion):
     finally:
         cursor.close()
 
-def insertar_datos_FIFA(conexion,name_csv):
+def insertar_datos_FIFA(conexion,name_csv,year):
     cursor = conexion.cursor()
 
     try:
@@ -91,8 +91,8 @@ def insertar_datos_FIFA(conexion,name_csv):
             for fila in leer_csv:
                 position, team, games_played, win, draw, loss, goals_for, goals_against, goal_difference, points = fila
                 insert_query = f'''
-                INSERT INTO FIFA (Position, Team, Games_Played, Win, Draw, Loss, Goals_For, Goals_Against, Goal_Difference, Points)
-                VALUES ({position}, '{team}', {games_played}, {win}, {draw}, {loss}, {goals_for}, {goals_against}, {goal_difference}, {points})
+                INSERT INTO FIFA (Position, Team, Games_Played, Win, Draw, Loss, Goals_For, Goals_Against, Goal_Difference, Points, Year)
+                VALUES ({position}, '{team}', {games_played}, {win}, {draw}, {loss}, {goals_for}, {goals_against}, {goal_difference}, {points}, {year})
                 '''
                 cursor.execute(insert_query)
             
@@ -113,10 +113,10 @@ try:
     insertar_datos(conexion)
 
     # Obtiene una lista de todos los archivos .csv
-    directorio_csv = os.path.abspath('./archivos_csv')
-    archivos_csv = [archivo for archivo in os.listdir(directorio_csv) if archivo.endswith('.csv')]
+    archivos_csv = [archivo for archivo in os.listdir('.') if archivo.endswith('.csv')]
     for archivo in archivos_csv:
-        insertar_datos_FIFA(conexion,archivo)
+        year = int(archivo[7:11])
+        insertar_datos_FIFA(conexion,archivo,year)
 
     conexion.close()
     
