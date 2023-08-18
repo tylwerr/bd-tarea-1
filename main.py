@@ -3,7 +3,18 @@ import csv
 import os
 
 
-def crear_tabla(conexion):
+def verificar_tablas_existen(conexion, table_names):
+    cursor = conexion.cursor()
+    
+    existing_tables = [table[2] for table in cursor.tables(tableType='TABLE')]
+    
+    for table_name in table_names:
+        if table_name in existing_tables:
+            return True
+            
+    return False
+
+def crear_tablas(conexion):
     cursor = conexion.cursor()
     create_table_query = '''
     CREATE TABLE SUMMARY (
@@ -20,7 +31,7 @@ def crear_tabla(conexion):
     
     CREATE TABLE FIFA (
         Position SMALLINT NOT NULL,
-        Team NVARCHAR(50) PRIMARY KEY NOT NULL,
+        Team NVARCHAR(50) NOT NULL,
         Games_Played SMALLINT NOT NULL,
         Win SMALLINT NOT NULL,
         Draw SMALLINT NOT NULL,
@@ -29,14 +40,15 @@ def crear_tabla(conexion):
         Goals_Against SMALLINT NOT NULL,
         Goal_Difference SMALLINT NOT NULL,
         Points SMALLINT NOT NULL,
-        Year SMALLINT NOT NULL FOREIGN KEY REFERENCES SUMMARY(Year)
+        Year SMALLINT NOT NULL FOREIGN KEY REFERENCES SUMMARY(Year),
+        ID SMALLINT NOT NULL PRIMARY KEY
     );
     '''
     cursor.execute(create_table_query)
     conexion.commit()
     cursor.close()
 
-def insertar_datos(conexion):
+def insertar_datos_SUMMARY(conexion):
     cursor = conexion.cursor()
     
     datos_summary = [
@@ -80,25 +92,33 @@ def insertar_datos(conexion):
     finally:
         cursor.close()
 
-def insertar_datos_FIFA(conexion,name_csv,year):
+def insertar_datos_FIFA(conexion,ruta,year):
+    global i
     cursor = conexion.cursor()
 
     try:
-        with open(name_csv, 'r') as archivo:
+        with open(ruta, 'r') as archivo:
             leer_csv = csv.reader(archivo)
             next(leer_csv)  # Salta la primera linea
 
             for fila in leer_csv:
                 position, team, games_played, win, draw, loss, goals_for, goals_against, goal_difference, points = fila
+                
+                if 'âˆ’' in goal_difference:
+                    goal_difference = goal_difference.replace('âˆ’','-')
+                    goal_difference = int(goal_difference)
+
+                if '*' in team:
+                    team = team.replace('*','')
+                
                 insert_query = f'''
-                INSERT INTO FIFA (Position, Team, Games_Played, Win, Draw, Loss, Goals_For, Goals_Against, Goal_Difference, Points, Year)
-                VALUES ({position}, '{team}', {games_played}, {win}, {draw}, {loss}, {goals_for}, {goals_against}, {goal_difference}, {points}, {year})
+                INSERT INTO FIFA (Position, Team, Games_Played, Win, Draw, Loss, Goals_For, Goals_Against, Goal_Difference, Points, Year, ID)
+                VALUES ({position}, '{team}', {games_played}, {win}, {draw}, {loss}, {goals_for}, {goals_against}, {goal_difference}, {points}, {year}, {i})
                 '''
                 cursor.execute(insert_query)
+                i += 1
             
             conexion.commit()
-            print(f"Datos del archivo {name_csv} insertados correctamente.")
-
         
     except pyodbc.Error as ex:
         print("Ocurrió un error al insertar datos:", ex)
@@ -109,17 +129,22 @@ def insertar_datos_FIFA(conexion,name_csv,year):
 
 try:
     conexion = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-3H6HKSS\SQLEXPRESS;DATABASE=fut_usm;Trusted_Connection=yes;')
-    crear_tabla(conexion)
-    insertar_datos(conexion)
+    tablas_a_crear = ["SUMMARY", "FIFA"]
 
-    # Obtiene una lista de todos los archivos .csv
-    archivos_csv = [archivo for archivo in os.listdir('.') if archivo.endswith('.csv')]
-    for archivo in archivos_csv:
-        year = int(archivo[7:11])
-        insertar_datos_FIFA(conexion,archivo,year)
+    if not verificar_tablas_existen(conexion, tablas_a_crear):
+        crear_tablas(conexion)
+        insertar_datos_SUMMARY(conexion)
+
+        # Obtiene una lista de todos los archivos .csv
+        directorio_csv = os.path.abspath('./archivos_csv')
+        archivos_csv = [archivo for archivo in os.listdir(directorio_csv) if archivo.endswith('.csv')]
+        i = 1 # Contador para id
+        for archivo in archivos_csv:
+            ruta = os.path.join(directorio_csv, archivo)
+            year = int(archivo[7:11])
+            insertar_datos_FIFA(conexion,ruta,year)
 
     conexion.close()
-    
 
 except Exception as e:
     print("Ocurrió un error al conectar a SQL Server: ", e)

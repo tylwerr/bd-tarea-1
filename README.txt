@@ -10,6 +10,7 @@ Detalles de uso del programa:
 
 
 Consideraciones:
-
+	- Como el archivo de sumario contenía pocos datos, decidimos agregarlos manualmente, no así como los otros que
+	los leimos desde python cada uno.
 
 Detalles de las herramientas usadas:
