@@ -1,8 +1,16 @@
 import pyodbc
+import pandas as pd
 import csv
 import os
 
 
+'''
+NOMBRE DE LA FUNCION
+———————–
+VARIABLE: TIPO
+————————
+BREVE DESCRIPCION DE LA FUNCION
+'''
 def verificar_tablas_existen(conexion, table_names):
     cursor = conexion.cursor()
     
@@ -104,6 +112,7 @@ def insertar_datos_FIFA(conexion,ruta,year):
             for fila in leer_csv:
                 position, team, games_played, win, draw, loss, goals_for, goals_against, goal_difference, points = fila
                 
+                # Verifica que tenga el simbolo especial y reemplazarlo
                 if 'âˆ’' in goal_difference:
                     goal_difference = goal_difference.replace('âˆ’','-')
                     goal_difference = int(goal_difference)
@@ -138,7 +147,7 @@ try:
         # Obtiene una lista de todos los archivos .csv
         directorio_csv = os.path.abspath('./archivos_csv')
         archivos_csv = [archivo for archivo in os.listdir(directorio_csv) if archivo.endswith('.csv')]
-        i = 1 # Contador para id
+        i = 1 # Contador para id (primary key)
         for archivo in archivos_csv:
             ruta = os.path.join(directorio_csv, archivo)
             year = int(archivo[7:11])
