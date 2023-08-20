@@ -1,4 +1,5 @@
 from funciones import *
+from funciones import verificar_tablas_existen
 import pyodbc
 import pandas as pd
 import csv
@@ -16,11 +17,11 @@ try:
         # Obtiene una lista de todos los archivos .csv
         directorio_csv = os.path.abspath('./archivos_csv')
         archivos_csv = [archivo for archivo in os.listdir(directorio_csv) if archivo.endswith('.csv')]
-        i = 1 # Contador para id (primary key)
+        i = 1 # Contador para ID (primary key)
         for archivo in archivos_csv:
             ruta = os.path.join(directorio_csv, archivo)
             year = int(archivo[7:11])
-            insertar_datos_FIFA(conexion,ruta,year)
+            i = insertar_datos_FIFA(conexion,ruta,year,i) 
 
     conexion.close()
 

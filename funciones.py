@@ -1,8 +1,8 @@
-import main
 import pyodbc
 import pandas as pd
 import csv
 import os
+
 
 '''
 NOMBRE DE LA FUNCION
@@ -100,9 +100,9 @@ def insertar_datos_SUMMARY(conexion):
     finally:
         cursor.close()
 
-def insertar_datos_FIFA(conexion,ruta,year):
-    global i
+def insertar_datos_FIFA(conexion,ruta,year,i):
     cursor = conexion.cursor()
+    j = i # variable incremento para ID
 
     try:
         with open(ruta, 'r') as archivo:
@@ -122,10 +122,10 @@ def insertar_datos_FIFA(conexion,ruta,year):
                 
                 insert_query = f'''
                 INSERT INTO FIFA (Position, Team, Games_Played, Win, Draw, Loss, Goals_For, Goals_Against, Goal_Difference, Points, Year, ID)
-                VALUES ({position}, '{team}', {games_played}, {win}, {draw}, {loss}, {goals_for}, {goals_against}, {goal_difference}, {points}, {year}, {i})
+                VALUES ({position}, '{team}', {games_played}, {win}, {draw}, {loss}, {goals_for}, {goals_against}, {goal_difference}, {points}, {year}, {j})
                 '''
                 cursor.execute(insert_query)
-                i += 1
+                j += 1
             
             conexion.commit()
         
@@ -134,3 +134,4 @@ def insertar_datos_FIFA(conexion,ruta,year):
         
     finally:
         cursor.close()
+        return j
