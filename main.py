@@ -1,5 +1,6 @@
 from funciones import *
 from funciones import verificar_tablas_existen
+from sqlalchemy import create_engine
 import pyodbc
 import pandas as pd
 import csv
@@ -8,6 +9,7 @@ import os
 
 try:
     conexion = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-3H6HKSS\SQLEXPRESS;DATABASE=fut_usm;Trusted_Connection=yes;')
+    engine = create_engine('mssql+pyodbc://', creator=lambda: conexion) # Conexion pyodbc en una conexión SQLAlchemy
     
     tablas_a_crear = ["SUMMARY", "FIFA"]
     if not verificar_tablas_existen(conexion, tablas_a_crear):
@@ -23,6 +25,66 @@ try:
             year = int(archivo[7:11])
             i = insertar_datos_FIFA(conexion,ruta,year,i) 
 
+    while True:
+        print("Menu Fut-USM: ")
+        print("1. Mostrar Campeones")
+        print("2. Mostrar goleadores")
+        print("3. Mostrar Tercer Lugar más veces")
+        print("4. Mostrar Pais mas goles recibidos")
+        print("5. Buscar un pais")
+        print("6. Top 3 paises en el mundial")
+        print("7. Mayor cantidad ganados")
+        print("8. Paises ganando en casa")
+        print("9. Mas veces en el podio")
+        print("10. Mayores rivales")
+        print("0. Salir")
+        respuesta = input("Seleccione una opcion: ")
+        
+        if respuesta == "1":
+            campeones_query = """ 
+            SELECT Year, Champion
+            FROM SUMMARY
+            
+            """
+            campeones_resultados = pd.read_sql_query(campeones_query,engine)
+            print("Campeones: ")
+            print(campeones_resultados.to_string(index=False))
+            print('\n')
+     
+        elif respuesta == "2":
+            print("Hasta pronto")
+            
+        elif respuesta == "3":
+            print("Hasta pronto")
+            
+        elif respuesta == "4":
+            print("Hasta pronto")
+            
+        elif respuesta == "5":
+            print("Hasta pronto")
+            
+        elif respuesta == "6":
+            print("Hasta pronto")
+            
+        elif respuesta == "7":
+            print("Hasta pronto")
+            
+        elif respuesta == "8":
+            print("Hasta pronto")
+
+        elif respuesta == "9":
+            print("Hasta pronto")
+            
+        elif respuesta == "10":
+            print("Hasta pronto")
+            
+        elif respuesta == "0":
+            print("Hasta pronto")
+            break
+        
+        else:
+            print("Opcion no valida, ingresa una nueva opcion")
+            
     conexion.close()
 
 except Exception as e:
