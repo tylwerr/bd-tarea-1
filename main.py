@@ -38,16 +38,17 @@ try:
         print("9. Mas veces en el podio")
         print("10. Mayores rivales")
         print("0. Salir")
+        print()
         respuesta = input("Seleccione una opcion: ")
+        print()
         
         if respuesta == "1":
             campeones_query = """ 
-            SELECT Year, Champion
+            SELECT Year AS Año, Champion AS Campeon
             FROM SUMMARY
-            
             """
+            
             campeones_resultados = pd.read_sql_query(campeones_query,engine)
-            print("Campeones: ")
             print(campeones_resultados.to_string(index=False))
             print('\n')
      
@@ -70,8 +71,17 @@ try:
             print("Hasta pronto")
             
         elif respuesta == "8":
-            print("Hasta pronto")
-
+            paises_ganando_en_casa_query = """
+            SELECT Year AS Año, Host AS Anfitrion, Champion AS Campeon
+            FROM SUMMARY
+            WHERE Host = Champion;
+            """
+            
+            paises_ganando_en_casa_resultado = pd.read_sql_query(paises_ganando_en_casa_query,engine)
+            print("Paises ganando en casa: ")
+            print(paises_ganando_en_casa_resultado.to_string(index=False))
+            print('\n')
+        
         elif respuesta == "9":
             print("Hasta pronto")
             
@@ -89,3 +99,14 @@ try:
 
 except Exception as e:
     print("Ocurrió un error al conectar a SQL Server: ", e)
+
+'''
+    -- Crear una vista que muestra los nombres de los estudiantes y los nombres de los cursos que están tomando
+    CREATE VIEW StudentCourses AS
+    SELECT Students.StudentName, Courses.CourseName
+    FROM Students
+    JOIN Courses ON Students.CourseID = Courses.CourseID;
+
+    -- Consultar la vista para obtener los nombres de los estudiantes y los nombres de los cursos que están tomando
+    SELECT * FROM StudentCourses;
+'''
