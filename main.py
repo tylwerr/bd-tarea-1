@@ -1,6 +1,5 @@
 from funciones import *
-from funciones import verificar_tablas_existen
-from sqlalchemy import create_engine
+from funciones import verificar_tablas_existen, insertar_datos_SUMMARY
 import pyodbc
 import pandas as pd
 import csv
@@ -9,21 +8,25 @@ import os
 
 try:
     conexion = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-3H6HKSS\SQLEXPRESS;DATABASE=fut_usm;Trusted_Connection=yes;')
-    engine = create_engine('mssql+pyodbc://', creator=lambda: conexion) # Conexion pyodbc en una conexión SQLAlchemy
     
     tablas_a_crear = ["SUMMARY", "FIFA"]
     if not verificar_tablas_existen(conexion, tablas_a_crear):
         crear_tablas(conexion)
-        insertar_datos_SUMMARY(conexion)
 
         # Obtiene una lista de todos los archivos .csv
         directorio_csv = os.path.abspath('./archivos_csv')
         archivos_csv = [archivo for archivo in os.listdir(directorio_csv) if archivo.endswith('.csv')]
+        
+        # Insertar datos a la tabla SUMMARY
+        ruta = os.path.join(directorio_csv, archivos_csv[-1])
+        insertar_datos_SUMMARY(conexion,ruta)
+
         i = 1 # Contador para ID (primary key)
         for archivo in archivos_csv:
-            ruta = os.path.join(directorio_csv, archivo)
-            year = int(archivo[7:11])
-            i = insertar_datos_FIFA(conexion,ruta,year,i) 
+            if "Summary" not in archivo:
+                ruta = os.path.join(directorio_csv, archivo)
+                year = int(archivo[7:11])
+                i = insertar_datos_FIFA(conexion,ruta,year,i)
 
     while True:
         print("Menu Fut-USM: ")
@@ -48,7 +51,7 @@ try:
             FROM SUMMARY
             """
             
-            campeones_resultados = pd.read_sql_query(campeones_query,engine)
+            campeones_resultados = pd.read_sql_query(campeones_query,conexion)
             print(campeones_resultados.to_string(index=False))
             print('\n')
      
@@ -77,7 +80,7 @@ try:
             WHERE Host = Champion;
             """
             
-            paises_ganando_en_casa_resultado = pd.read_sql_query(paises_ganando_en_casa_query,engine)
+            paises_ganando_en_casa_resultado = pd.read_sql_query(paises_ganando_en_casa_query,conexion)
             print("Paises ganando en casa: ")
             print(paises_ganando_en_casa_resultado.to_string(index=False))
             print('\n')
