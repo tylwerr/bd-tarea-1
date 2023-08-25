@@ -92,7 +92,7 @@ try:
             print("Hasta pronto")
             
         elif respuesta == "0":
-            print("Hasta pronto")
+            print("¡Hasta pronto!")
             break
         
         else:
