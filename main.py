@@ -68,7 +68,7 @@ try:
             """)
 
             data = cursor.fetchall()
-            goleadores = pd.DataFrame.from_records(data, columns=["Equipo","Goles_totales"])
+            goleadores = pd.DataFrame.from_records(data, columns=["Equipo","Goles_marcados"])
             print(goleadores.to_string(index=False))
             print('\n')
             
@@ -88,17 +88,51 @@ try:
             print('\n')
             
         elif respuesta == "4":
-            print("Hasta pronto")
+
+            cursor.execute("""
+            SELECT TOP 5 Team AS Equipo, SUM(Goals_Against) AS Goles_en_contra
+            FROM FIFA
+            GROUP BY Team
+            ORDER BY SUM(Goals_Against) DESC;
+            """)
+            
+            data = cursor.fetchall()
+            goles_en_contra = pd.DataFrame.from_records(data, columns=["Equipo","Goles_recibidos"])
+            print(goles_en_contra.to_string(index=False))
+            print('\n')
             
         elif respuesta == "5":
             print("Hasta pronto")
             
         elif respuesta == "6":
-            print("Hasta pronto")
+
+            cursor.execute("""
+            SELECT TOP 3 Team AS Equipo, COUNT(Team) AS Cantidad_mundiales_jugados
+            FROM FIFA
+            GROUP BY Team
+            ORDER BY COUNT(Team) DESC;
+            """)
+            
+            data = cursor.fetchall()
+            cantidad_mundiales = pd.DataFrame.from_records(data, columns=["Equipo","Mundiales_jugados"])
+            print(cantidad_mundiales.to_string(index=False))
+            print('\n')
             
         elif respuesta == "7":
-            print("Hasta pronto")
-            
+
+            cursor.execute("""
+            SELECT TOP 1 Team AS Equipo, CONCAT(CAST((SUM(Win) * 100.0 / SUM(Games_Played)) AS DECIMAL(10, 2)), '%') AS Tasa_partidos_ganados
+            FROM FIFA
+            GROUP BY Team
+            ORDER BY Tasa_partidos_ganados DESC;
+            """
+            )
+ 
+            data = cursor.fetchall()
+            promedio_partidos_ganados = pd.DataFrame.from_records(data, columns=["Equipo", "Tasa_partidos_ganados"])
+            print(promedio_partidos_ganados.to_string(index=False))
+            print('\n')
+
         elif respuesta == "8":
 
             cursor.execute("""
@@ -114,7 +148,41 @@ try:
             print('\n')
         
         elif respuesta == "9":
-            print("Hasta pronto")
+            #HACER ESTA WEA CON LA FUNCION DE SQL 
+            cursor.execute("""
+            SELECT TOP 1 Champion AS Campeon, COUNT(Champion)
+            FROM SUMMARY
+            GROUP BY Champion
+            ORDER BY COUNT(Champion) DESC;
+            """)
+
+            data = cursor.fetchall()
+            campeon_mayor_veces = pd.DataFrame.from_records(data, columns=["Pais","Veces_campeon"])
+
+            cursor.execute("""
+            SELECT TOP 1 Runner_up AS Segundo, COUNT(Runner_up)
+            FROM SUMMARY
+            GROUP BY Runner_up
+            ORDER BY COUNT(Runner_up) DESC;
+            """)
+            
+            data = cursor.fetchall()
+            segundo_mayor_veces = pd.DataFrame.from_records(data, columns=["Pais","Veces_segundo_lugar"])
+
+            cursor.execute("""
+            SELECT TOP 1 Third_place AS Tercero, COUNT(Third_place)
+            FROM SUMMARY
+            GROUP BY Third_place
+            ORDER BY COUNT(Third_place) DESC;
+            """)
+            
+            data = cursor.fetchall()
+            tercer_mayor_veces = pd.DataFrame.from_records(data, columns=["Pais","Veces_tercer_lugar"])
+
+            print(campeon_mayor_veces.to_string(index=False))
+            print(segundo_mayor_veces.to_string(index=False))
+            print(tercer_mayor_veces.to_string(index=False))
+            print('\n')
             
         elif respuesta == "10":
             print("Hasta pronto")
@@ -122,7 +190,7 @@ try:
         elif respuesta == "0":
             print("¡Hasta pronto!")
             break
-        
+
         else:
             print("Opcion no valida, ingresa una nueva opcion")
             
