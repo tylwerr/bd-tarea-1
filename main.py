@@ -8,6 +8,7 @@ import os
 
 try:
     conexion = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-3H6HKSS\SQLEXPRESS;DATABASE=fut_usm;Trusted_Connection=yes;')
+    cursor = conexion.cursor()
     
     tablas_a_crear = ["SUMMARY", "FIFA"]
     if not verificar_tablas_existen(conexion, tablas_a_crear):
@@ -46,20 +47,45 @@ try:
         print()
         
         if respuesta == "1":
-            campeones_query = """ 
+
+            cursor.execute(""" 
             SELECT Year AS Año, Champion AS Campeon
             FROM SUMMARY
-            """
-            
-            campeones_resultados = pd.read_sql_query(campeones_query,conexion)
+            """)
+
+            data = cursor.fetchall()
+            campeones_resultados = pd.DataFrame.from_records(data, columns=["Año","Campeon"])
             print(campeones_resultados.to_string(index=False))
             print('\n')
      
         elif respuesta == "2":
-            print("Hasta pronto")
+
+            cursor.execute("""
+            SELECT TOP 5 Team AS Equipo, SUM(Goals_For) AS Total_Goles
+            FROM FIFA
+            GROUP BY Team
+            ORDER BY SUM(Goals_for) DESC;
+            """)
+
+            data = cursor.fetchall()
+            goleadores = pd.DataFrame.from_records(data, columns=["Equipo","Goles_totales"])
+            print(goleadores.to_string(index=False))
+            print('\n')
             
         elif respuesta == "3":
-            print("Hasta pronto")
+
+            cursor.execute("""
+            SELECT TOP 5 Third_place AS Tercer_lugar, COUNT(Third_place) AS cantidad_tercer_lugar
+            FROM SUMMARY
+            GROUP BY Third_place
+            ORDER BY COUNT(Third_place) DESC;
+            """)
+
+            data = cursor.fetchall()
+            tercer_lugar = pd.DataFrame.from_records(data, columns=["Equipo","Cantidad"])
+            print("Top 5 equipos con mayor tercer lugar: \n")
+            print(tercer_lugar.to_string(index=False))
+            print('\n')
             
         elif respuesta == "4":
             print("Hasta pronto")
@@ -74,13 +100,15 @@ try:
             print("Hasta pronto")
             
         elif respuesta == "8":
-            paises_ganando_en_casa_query = """
+
+            cursor.execute("""
             SELECT Year AS Año, Host AS Anfitrion, Champion AS Campeon
             FROM SUMMARY
             WHERE Host = Champion;
-            """
-            
-            paises_ganando_en_casa_resultado = pd.read_sql_query(paises_ganando_en_casa_query,conexion)
+            """)
+
+            data = cursor.fetchall()
+            paises_ganando_en_casa_resultado = pd.DataFrame.from_records(data, columns=["Año","Anfitrion","Campeon"])
             print("Paises ganando en casa: ")
             print(paises_ganando_en_casa_resultado.to_string(index=False))
             print('\n')
@@ -98,10 +126,11 @@ try:
         else:
             print("Opcion no valida, ingresa una nueva opcion")
             
+    cursor.close()
     conexion.close()
 
 except Exception as e:
-    print("Ocurrió un error al conectar a SQL Server: ", e)
+    print("Ocurrio un error al conectar a SQL Server: ", e)
 
 '''
     -- Crear una vista que muestra los nombres de los estudiantes y los nombres de los cursos que están tomando
