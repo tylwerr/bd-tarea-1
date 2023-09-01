@@ -29,6 +29,11 @@ try:
                 year = int(archivo[7:11])
                 i = insertar_datos_FIFA(conexion,ruta,year,i)
 
+    # Creacion de funcion SQL
+    archivo = open('funcion_calcular_tasa.sql','r')
+    data = archivo.read()
+    cursor.execute(data)
+
     while True:
         print("Menu Fut-USM: ")
         print("1. Mostrar Campeones")
@@ -102,13 +107,16 @@ try:
             print('\n')
             
         elif respuesta == "5":
+            
+            salir = True
+            while salir:
+                respuesta = mostrar_menu_equipos(conexion)
 
-            mostrar_menu_equipos(conexion)
-            seleccion = input("\nIngrese su respuesta: ")
+                if respuesta == 's':
+                    salir = False
+                else:
+                    mostrar_info_equipo(conexion,respuesta)
             
-            
-            
-
         elif respuesta == "6":
 
             cursor.execute("""
@@ -126,7 +134,7 @@ try:
         elif respuesta == "7":
 
             cursor.execute("""
-            SELECT TOP 1 Team AS Equipo, CONCAT(CAST(calcularTasa(SUM(Win),SUM(Games_Played))) AS DECIMAL(10, 2)), '%') AS Tasa_partidos_ganados
+            SELECT TOP 1 Team AS Equipo, CONCAT(CAST(dbo.calcularTasa(SUM(Win),SUM(Games_Played))) AS DECIMAL(10, 2)), '%') AS Tasa_partidos_ganados
             FROM FIFA
             GROUP BY Team
             ORDER BY Tasa_partidos_ganados DESC;
@@ -153,7 +161,7 @@ try:
             print('\n')
         
         elif respuesta == "9":
-            
+            # ANIDAR QUERYS
             cursor.execute("""
             SELECT TOP 1 Champion AS Campeon, COUNT(Champion)
             FROM SUMMARY

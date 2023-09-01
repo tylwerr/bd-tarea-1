@@ -3,6 +3,33 @@ import pandas as pd
 import csv
 import os
 
+def mostrar_info_equipo(conexion, equipo_seleccionado):
+    cursor = conexion.cursor()
+
+    try:
+        cursor.execute("""
+        SELECT *
+        FROM FIFA
+        WHERE Team = ?
+        ORDER BY Year;
+        """, equipo_seleccionado)
+        
+        info_equipo = cursor.fetchall()
+
+        if info_equipo:
+            print(f"\nInformacion del equipo {equipo_seleccionado}:\n")
+            df = pd.DataFrame.from_records(info_equipo, columns=[desc[0] for desc in cursor.description])
+            columns_to_exclude = ["ID", "Team"]
+            df.drop(columns=columns_to_exclude, inplace=True)
+            for year, grupo_df in df.groupby("Year"):
+                print(f"Año {year}:")
+                print(grupo_df.to_string(index=False))
+                print('\n')
+    except Exception as e:
+        print("error", e)
+
+
+
 def mostrar_menu_equipos(conexion):
     cursor = conexion.cursor()
     cursor.execute("""
@@ -18,6 +45,17 @@ def mostrar_menu_equipos(conexion):
         print(f"{i}. {equipo_str}")
     print('\n')
 
+    while True:
+        numero_equipo = input("Ingrese su respuesta('s' para salir): ")
+        if numero_equipo == 's':
+            return 's'
+        elif numero_equipo.isdigit():
+            numero_equipo = int(numero_equipo)
+            return equipos[numero_equipo-1][0]
+        else:
+            print("Opcion no valida")
+            print('\n')
+            
 '''
 NOMBRE DE LA FUNCION
 ———————–

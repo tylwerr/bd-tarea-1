@@ -3,6 +3,6 @@ RETURNS FLOAT
 AS
 BEGIN
     DECLARE @tasa FLOAT;
-    SET @tasa = ( @suma_wins*100.0 ) / @suma_games;
-    RETURN @tasa;
+    SET @tasa = ( @suma_wins * 100.0 ) / @suma_games;
+    RETURN @tasa
 END;
