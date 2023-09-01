@@ -102,8 +102,13 @@ try:
             print('\n')
             
         elif respuesta == "5":
-            print("Hasta pronto")
+
+            mostrar_menu_equipos(conexion)
+            seleccion = input("\nIngrese su respuesta: ")
             
+            
+            
+
         elif respuesta == "6":
 
             cursor.execute("""
@@ -121,7 +126,7 @@ try:
         elif respuesta == "7":
 
             cursor.execute("""
-            SELECT TOP 1 Team AS Equipo, CONCAT(CAST((SUM(Win) * 100.0 / SUM(Games_Played)) AS DECIMAL(10, 2)), '%') AS Tasa_partidos_ganados
+            SELECT TOP 1 Team AS Equipo, CONCAT(CAST(calcularTasa(SUM(Win),SUM(Games_Played))) AS DECIMAL(10, 2)), '%') AS Tasa_partidos_ganados
             FROM FIFA
             GROUP BY Team
             ORDER BY Tasa_partidos_ganados DESC;
@@ -148,7 +153,7 @@ try:
             print('\n')
         
         elif respuesta == "9":
-            #HACER ESTA WEA CON LA FUNCION DE SQL 
+            
             cursor.execute("""
             SELECT TOP 1 Champion AS Campeon, COUNT(Champion)
             FROM SUMMARY

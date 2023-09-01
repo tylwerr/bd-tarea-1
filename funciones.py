@@ -3,6 +3,20 @@ import pandas as pd
 import csv
 import os
 
+def mostrar_menu_equipos(conexion):
+    cursor = conexion.cursor()
+    cursor.execute("""
+    SELECT DISTINCT Team
+    FROM FIFA;
+    """)
+    
+    equipos = cursor.fetchall()
+    print("Seleccione un equipo segun su numero:")
+    
+    for i, equipo in enumerate(equipos, start=1):
+        equipo_str = ', '.join(str(elemento) for elemento in equipo)
+        print(f"{i}. {equipo_str}")
+    print('\n')
 
 '''
 NOMBRE DE LA FUNCION
