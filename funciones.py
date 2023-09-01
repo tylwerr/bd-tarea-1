@@ -29,7 +29,6 @@ def mostrar_info_equipo(conexion, equipo_seleccionado):
         print("error", e)
 
 
-
 def mostrar_menu_equipos(conexion):
     cursor = conexion.cursor()
     cursor.execute("""
