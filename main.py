@@ -163,38 +163,35 @@ try:
         elif respuesta == "9":
             # ANIDAR QUERYS
             cursor.execute("""
-            SELECT TOP 1 Champion AS Campeon, COUNT(Champion)
-            FROM SUMMARY
-            GROUP BY Champion
-            ORDER BY COUNT(Champion) DESC;
-            """)
-
-            data = cursor.fetchall()
-            campeon_mayor_veces = pd.DataFrame.from_records(data, columns=["Pais","Veces_campeon"])
-
-            cursor.execute("""
-            SELECT TOP 1 Runner_up AS Segundo, COUNT(Runner_up)
-            FROM SUMMARY
-            GROUP BY Runner_up
-            ORDER BY COUNT(Runner_up) DESC;
-            """)
-            
-            data = cursor.fetchall()
-            segundo_mayor_veces = pd.DataFrame.from_records(data, columns=["Pais","Veces_segundo_lugar"])
-
-            cursor.execute("""
-            SELECT TOP 1 Third_place AS Tercero, COUNT(Third_place)
-            FROM SUMMARY
-            GROUP BY Third_place
-            ORDER BY COUNT(Third_place) DESC;
+            SELECT Campeon AS Equipo, Cantidad
+            FROM (
+                           
+                SELECT TOP 1 Champion AS Campeon, COUNT(Champion) AS Cantidad
+                FROM SUMMARY
+                GROUP BY Champion
+                ORDER BY COUNT(Champion) DESC
+                UNION
+                SELECT TOP 1 Runner_up AS Segundo, COUNT(Runner_up) AS Cantidad
+                FROM SUMMARY
+                GROUP BY Runner_up
+                ORDER BY COUNT(Runner_up) DESC
+                UNION
+                SELECT TOP 1 Third_place AS Tercero, COUNT(Third_place) AS Cantidad
+                FROM SUMMARY
+                GROUP BY Third_place
+                ORDER BY COUNT(Third_place) DESC
+            ) Equipos  
+            ORDER BY Cantidad DESC;
             """)
             
             data = cursor.fetchall()
-            tercer_mayor_veces = pd.DataFrame.from_records(data, columns=["Pais","Veces_tercer_lugar"])
+            podio = pd.DataFrame.from_records(data, columns=["Pais","Veces_en_el_podio"])
 
-            print(campeon_mayor_veces.to_string(index=False))
-            print(segundo_mayor_veces.to_string(index=False))
-            print(tercer_mayor_veces.to_string(index=False))
+            print("Primer equipo -> Campeon")
+            print("Segundo equipo -> Segundo lugar")
+            print("Tercer equipo -> Tercer lugar")
+            print()
+            print(podio)
             print('\n')
             
         elif respuesta == "10":
