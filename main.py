@@ -29,11 +29,7 @@ try:
                 year = int(archivo[7:11])
                 i = insertar_datos_FIFA(conexion,ruta,year,i)
 
-    # Creacion de funcion SQL
-    archivo = open('funcion_calcular_tasa.sql','r')
-    data = archivo.read()
-    cursor.execute(data)
-
+    # Menu y opciones
     while True:
         print("Menu Fut-USM: ")
         print("1. Mostrar Campeones")
@@ -134,7 +130,7 @@ try:
         elif respuesta == "7":
 
             cursor.execute("""
-            SELECT TOP 1 Team AS Equipo, CONCAT(CAST(dbo.calcularTasa(SUM(Win),SUM(Games_Played))) AS DECIMAL(10, 2)), '%') AS Tasa_partidos_ganados
+            SELECT TOP 1 Team AS Equipo, CONCAT( CAST(dbo.calcularTasa(SUM(Win),SUM(Games_Played)) AS DECIMAL(10,2) ), '%') AS Tasa_partidos_ganados
             FROM FIFA
             GROUP BY Team
             ORDER BY Tasa_partidos_ganados DESC;
@@ -161,11 +157,10 @@ try:
             print('\n')
         
         elif respuesta == "9":
-            # ANIDAR QUERYS
+            
             cursor.execute("""
             SELECT Campeon AS Equipo, Cantidad
-            FROM (
-                           
+            FROM (    
                 SELECT TOP 1 Champion AS Campeon, COUNT(Champion) AS Cantidad
                 FROM SUMMARY
                 GROUP BY Champion
@@ -187,9 +182,9 @@ try:
             data = cursor.fetchall()
             podio = pd.DataFrame.from_records(data, columns=["Pais","Veces_en_el_podio"])
 
-            print("Primer equipo -> Campeon")
-            print("Segundo equipo -> Segundo lugar")
-            print("Tercer equipo -> Tercer lugar")
+            print("Primer equipo (0) -> Campeon")
+            print("Segundo equipo (1) -> Segundo lugar")
+            print("Tercer equipo (2) -> Tercer lugar")
             print()
             print(podio)
             print('\n')
@@ -209,14 +204,3 @@ try:
 
 except Exception as e:
     print("Ocurrio un error al conectar a SQL Server: ", e)
-
-'''
-    -- Crear una vista que muestra los nombres de los estudiantes y los nombres de los cursos que están tomando
-    CREATE VIEW StudentCourses AS
-    SELECT Students.StudentName, Courses.CourseName
-    FROM Students
-    JOIN Courses ON Students.CourseID = Courses.CourseID;
-
-    -- Consultar la vista para obtener los nombres de los estudiantes y los nombres de los cursos que están tomando
-    SELECT * FROM StudentCourses;
-'''
