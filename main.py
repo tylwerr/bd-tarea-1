@@ -50,8 +50,11 @@ try:
         if respuesta == "1":
 
             cursor.execute(""" 
-            SELECT Year AS Año, Champion AS Campeon
-            FROM SUMMARY
+            SELECT 
+                Year AS Año,
+                Champion AS Campeon
+            FROM
+                SUMMARY
             """)
 
             data = cursor.fetchall()
@@ -62,10 +65,15 @@ try:
         elif respuesta == "2":
 
             cursor.execute("""
-            SELECT TOP 5 Team AS Equipo, SUM(Goals_For) AS Total_Goles
-            FROM FIFA
-            GROUP BY Team
-            ORDER BY SUM(Goals_for) DESC;
+            SELECT TOP 5 
+                Team AS Equipo,
+                SUM(Goals_For) AS Total_Goles
+            FROM
+                FIFA
+            GROUP BY 
+                Team
+            ORDER BY 
+                SUM(Goals_for) DESC;
             """)
 
             data = cursor.fetchall()
@@ -76,10 +84,15 @@ try:
         elif respuesta == "3":
 
             cursor.execute("""
-            SELECT TOP 5 Third_place AS Tercer_lugar, COUNT(Third_place) AS cantidad_tercer_lugar
-            FROM SUMMARY
-            GROUP BY Third_place
-            ORDER BY COUNT(Third_place) DESC;
+            SELECT TOP 5 
+                Third_place AS Tercer_lugar,
+                COUNT(Third_place) AS cantidad_tercer_lugar
+            FROM
+                SUMMARY
+            GROUP BY 
+                Third_place
+            ORDER BY 
+                COUNT(Third_place) DESC;
             """)
 
             data = cursor.fetchall()
@@ -91,10 +104,15 @@ try:
         elif respuesta == "4":
 
             cursor.execute("""
-            SELECT TOP 5 Team AS Equipo, SUM(Goals_Against) AS Goles_en_contra
-            FROM FIFA
-            GROUP BY Team
-            ORDER BY SUM(Goals_Against) DESC;
+            SELECT TOP 5 
+                Team AS Equipo,
+                SUM(Goals_Against) AS Goles_en_contra
+            FROM 
+                FIFA
+            GROUP BY 
+                Team
+            ORDER BY 
+                SUM(Goals_Against) DESC;
             """)
             
             data = cursor.fetchall()
@@ -116,10 +134,15 @@ try:
         elif respuesta == "6":
 
             cursor.execute("""
-            SELECT TOP 3 Team AS Equipo, COUNT(Team) AS Cantidad_mundiales_jugados
-            FROM FIFA
-            GROUP BY Team
-            ORDER BY COUNT(Team) DESC;
+            SELECT TOP 3 
+                Team AS Equipo,
+                COUNT(Team) AS Cantidad_mundiales_jugados
+            FROM 
+                FIFA
+            GROUP BY 
+                Team
+            ORDER BY 
+                COUNT(Team) DESC;
             """)
             
             data = cursor.fetchall()
@@ -130,10 +153,15 @@ try:
         elif respuesta == "7":
 
             cursor.execute("""
-            SELECT TOP 1 Team AS Equipo, CONCAT( CAST(dbo.calcularTasa(SUM(Win),SUM(Games_Played)) AS DECIMAL(10,2) ), '%') AS Tasa_partidos_ganados
-            FROM FIFA
-            GROUP BY Team
-            ORDER BY Tasa_partidos_ganados DESC;
+            SELECT TOP 1 
+                Team AS Equipo,
+                CONCAT(CAST(dbo.calcularTasa(SUM(Win),SUM(Games_Played)) AS DECIMAL(10,2) ), '%') AS Tasa_partidos_ganados
+            FROM
+                FIFA
+            GROUP BY 
+                Team
+            ORDER BY 
+                Tasa_partidos_ganados DESC;
             """
             )
  
@@ -145,9 +173,14 @@ try:
         elif respuesta == "8":
 
             cursor.execute("""
-            SELECT Year AS Año, Host AS Anfitrion, Champion AS Campeon
-            FROM SUMMARY
-            WHERE Host = Champion;
+            SELECT 
+                Year AS Año,
+                Host AS Anfitrion,
+                Champion AS Campeon
+            FROM 
+                SUMMARY
+            WHERE 
+                Host = Champion;
             """)
 
             data = cursor.fetchall()
@@ -159,24 +192,46 @@ try:
         elif respuesta == "9":
             
             cursor.execute("""
-            SELECT Campeon AS Equipo, Cantidad
+            SELECT 
+                Campeon AS Equipo,
+                Cantidad
             FROM (    
-                SELECT TOP 1 Champion AS Campeon, COUNT(Champion) AS Cantidad
-                FROM SUMMARY
-                GROUP BY Champion
-                ORDER BY COUNT(Champion) DESC
+                SELECT TOP 1 
+                    Champion AS Campeon,
+                    COUNT(Champion) AS Cantidad
+                FROM 
+                    SUMMARY
+                GROUP BY 
+                    Champion
+                ORDER BY 
+                    COUNT(Champion) DESC
+                           
                 UNION
-                SELECT TOP 1 Runner_up AS Segundo, COUNT(Runner_up) AS Cantidad
-                FROM SUMMARY
-                GROUP BY Runner_up
-                ORDER BY COUNT(Runner_up) DESC
+                           
+                SELECT TOP 1 
+                    Runner_up AS Segundo,
+                    COUNT(Runner_up) AS Cantidad
+                FROM 
+                    SUMMARY
+                GROUP BY 
+                    Runner_up
+                ORDER BY 
+                    COUNT(Runner_up) DESC
+                           
                 UNION
-                SELECT TOP 1 Third_place AS Tercero, COUNT(Third_place) AS Cantidad
-                FROM SUMMARY
-                GROUP BY Third_place
-                ORDER BY COUNT(Third_place) DESC
+                           
+                SELECT TOP 1 
+                    Third_place AS Tercero,
+                    COUNT(Third_place) AS Cantidad
+                FROM 
+                    SUMMARY
+                GROUP BY 
+                    Third_place
+                ORDER BY 
+                    COUNT(Third_place) DESC
             ) Equipos  
-            ORDER BY Cantidad DESC;
+            ORDER BY 
+                Cantidad DESC;
             """)
             
             data = cursor.fetchall()
@@ -195,13 +250,15 @@ try:
                 SELECT
                     CASE WHEN Champion < Runner_up THEN Champion ELSE Runner_up END AS Equipo1,
                     CASE WHEN Champion < Runner_up THEN Runner_up ELSE Champion END AS Equipo2
-                FROM SUMMARY
+                FROM 
+                    SUMMARY
             )
             SELECT TOP 1
                 Equipo1,
                 Equipo2,
                 COUNT(*) AS Veces_Repetidos
-            FROM Parejas
+            FROM 
+                Parejas
             GROUP BY 
                 Equipo1,
                 Equipo2
