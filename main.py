@@ -181,7 +181,6 @@ try:
             
             data = cursor.fetchall()
             podio = pd.DataFrame.from_records(data, columns=["Pais","Veces_en_el_podio"])
-
             print("Primer equipo (0) -> Campeon")
             print("Segundo equipo (1) -> Segundo lugar")
             print("Tercer equipo (2) -> Tercer lugar")
@@ -190,8 +189,35 @@ try:
             print('\n')
             
         elif respuesta == "10":
-            print("Hasta pronto")
             
+            cursor.execute("""
+            WITH Parejas AS(
+                SELECT
+                    CASE WHEN Champion < Runner_up THEN Champion ELSE Runner_up END AS Equipo1,
+                    CASE WHEN Champion < Runner_up THEN Runner_up ELSE Champion END AS Equipo2
+                FROM SUMMARY
+            )
+            SELECT TOP 1
+                Equipo1,
+                Equipo2,
+                COUNT(*) AS Veces_Repetidos
+            FROM Parejas
+            GROUP BY 
+                Equipo1,
+                Equipo2
+            ORDER BY 
+                Veces_Repetidos DESC;
+            """)
+
+            data = cursor.fetchall()
+            mayores_rivales = pd.DataFrame.from_records(data,columns=["Pais1","Pais2","Veces_Rivales"])
+            mayores_rivales['Rivales'] = mayores_rivales["Pais1"] + '-' + mayores_rivales["Pais2"]
+            mayores_rivales.drop(['Pais1', 'Pais2'], axis=1, inplace=True)
+            mayores_rivales = mayores_rivales[['Rivales', 'Veces_Rivales']] # Cambiar el orden de las columnas
+            print("Paises que han sido los mayores rivales: \n")
+            print(mayores_rivales.to_string(index=False))
+            print('\n')
+
         elif respuesta == "0":
             print("¡Hasta pronto!")
             break
