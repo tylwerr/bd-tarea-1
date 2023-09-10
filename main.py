@@ -50,13 +50,15 @@ try:
         if respuesta == "1":
 
             cursor.execute(""" 
+            CREATE VIEW CampeonesView AS
             SELECT 
                 Year AS Año,
-                Champion AS Campeon
+                Champion AS Campeon 
             FROM
                 SUMMARY
             """)
 
+            cursor.execute("SELECT * FROM CampeonesView")
             data = cursor.fetchall()
             campeones_resultados = pd.DataFrame.from_records(data, columns=["Año","Campeon"])
             print(campeones_resultados.to_string(index=False))
