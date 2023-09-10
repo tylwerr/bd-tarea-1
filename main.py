@@ -270,7 +270,7 @@ try:
 
             data = cursor.fetchall()
             mayores_rivales = pd.DataFrame.from_records(data,columns=["Pais1","Pais2","Veces_Rivales"])
-            mayores_rivales['Rivales'] = mayores_rivales["Pais1"] + '-' + mayores_rivales["Pais2"]
+            mayores_rivales['Rivales'] = mayores_rivales["Pais1"] + '-' + mayores_rivales["Pais2"]  # Se juntan los paises en una sola tabla
             mayores_rivales.drop(['Pais1', 'Pais2'], axis=1, inplace=True)
             mayores_rivales = mayores_rivales[['Rivales', 'Veces_Rivales']] # Cambiar el orden de las columnas
             print("Paises que han sido los mayores rivales: \n")
