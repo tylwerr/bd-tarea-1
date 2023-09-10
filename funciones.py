@@ -3,6 +3,14 @@ import pandas as pd
 import csv
 import os
 
+
+'''
+NOMBRE DE LA FUNCION
+———————–
+VARIABLE: TIPO
+————————
+BREVE DESCRIPCION DE LA FUNCION
+'''
 def mostrar_info_equipo(conexion, equipo_seleccionado):
     cursor = conexion.cursor()
 
@@ -29,6 +37,13 @@ def mostrar_info_equipo(conexion, equipo_seleccionado):
         print("error", e)
 
 
+'''
+mostrar_menu_equipos
+———————–
+conexion: Connection
+————————
+BREVE DESCRIPCION DE LA FUNCION
+'''
 def mostrar_menu_equipos(conexion):
     cursor = conexion.cursor()
     cursor.execute("""
@@ -54,25 +69,42 @@ def mostrar_menu_equipos(conexion):
         else:
             print("Opcion no valida")
             print('\n')
-            
+
+
 '''
-NOMBRE DE LA FUNCION
+verificar_tablas_existen
 ———————–
-VARIABLE: TIPO
+conexion: Connection
+table_names: lista de strings
 ————————
-BREVE DESCRIPCION DE LA FUNCION
+Toma table_names y la recorre para verificar que los nombres dentro de esta coincidan con las tablas
+existentes en la base de datos, si existen ambas retorna True en caso contrario False.
 '''
 def verificar_tablas_existen(conexion, table_names):
     cursor = conexion.cursor()
     
     existing_tables = [table[2] for table in cursor.tables(tableType='TABLE')]
+    existen = 0
     
     for table_name in table_names:
         if table_name in existing_tables:
-            return True
-            
-    return False
+            existen += 1
 
+    if existen == 2:
+        return True
+    else:
+        return False
+
+
+'''
+crear_tablas
+———————–
+conexion: Connection
+————————
+Se hace un query para crear dos tablas, SUMMARY y FIFA respectivamente, cada una representada con
+la informacion correspondiente, en el caso de FIFA se agrega una columna ID para crear una llave
+primaria a esa tabla.
+'''
 def crear_tablas(conexion):
     cursor = conexion.cursor()
     create_table_query = '''
@@ -107,6 +139,16 @@ def crear_tablas(conexion):
     conexion.commit()
     cursor.close()
 
+
+'''
+insertar_datos_SUMMARY
+———————–
+conexion: Connection
+ruta: string
+————————
+Lee el archivo de sumario usando ruta, salta la primera linea y luego hacee el query insertando
+los datos a la tabla SUMMARY.
+'''
 def insertar_datos_SUMMARY(conexion,ruta):
     cursor = conexion.cursor()
 
@@ -133,6 +175,19 @@ def insertar_datos_SUMMARY(conexion,ruta):
     finally:
         cursor.close()
     
+
+'''
+insertar_datos_FIFA
+———————–
+conexion: Connection
+ruta: string
+year: int
+i: int
+————————
+Abre el archivo usando ruta, lee cada fila sin contar la primera, corrobora que esté bien escrita
+y hace el query para insertar los datos a la tabla FIFA, se hace un contador de las filas el cual
+incrementa por fila insertada (esto para tener una llave primaria llamada ID, que es el contador).
+'''    
 def insertar_datos_FIFA(conexion,ruta,year,i):
     cursor = conexion.cursor()
     j = i # variable incremento para ID
