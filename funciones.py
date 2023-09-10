@@ -5,11 +5,12 @@ import os
 
 
 '''
-NOMBRE DE LA FUNCION
-———————–
-VARIABLE: TIPO
+mostrar_info_equipo
 ————————
-BREVE DESCRIPCION DE LA FUNCION
+conexion: Connection
+equipo_seleccionado: string
+————————
+Toma el equipo seleccionado y se obtiene toda su informacion de la tabla, excluyendo su nombre e ID.
 '''
 def mostrar_info_equipo(conexion, equipo_seleccionado):
     cursor = conexion.cursor()
@@ -39,10 +40,11 @@ def mostrar_info_equipo(conexion, equipo_seleccionado):
 
 '''
 mostrar_menu_equipos
-———————–
+————————
 conexion: Connection
 ————————
-BREVE DESCRIPCION DE LA FUNCION
+Toma los nombres de los equipos, los enumera y ordena alfabeticamente, luego los muestra por pantalla y permite escoger uno
+de ellos. Se retorna el equipo escogido.
 '''
 def mostrar_menu_equipos(conexion):
     cursor = conexion.cursor()
@@ -73,7 +75,7 @@ def mostrar_menu_equipos(conexion):
 
 '''
 verificar_tablas_existen
-———————–
+————————
 conexion: Connection
 table_names: lista de strings
 ————————
@@ -98,7 +100,7 @@ def verificar_tablas_existen(conexion, table_names):
 
 '''
 crear_tablas
-———————–
+————————
 conexion: Connection
 ————————
 Se hace un query para crear dos tablas, SUMMARY y FIFA respectivamente, cada una representada con
@@ -142,7 +144,7 @@ def crear_tablas(conexion):
 
 '''
 insertar_datos_SUMMARY
-———————–
+————————
 conexion: Connection
 ruta: string
 ————————
@@ -178,7 +180,7 @@ def insertar_datos_SUMMARY(conexion,ruta):
 
 '''
 insertar_datos_FIFA
-———————–
+————————
 conexion: Connection
 ruta: string
 year: int

@@ -1,3 +1,12 @@
+/* 
+calcularTasa
+————————
+@suma_wins: float
+@suma_games: float
+————————
+Se calcula la tasa apartir de la suma total de partidos ganados dividido por la
+suma total de partidos jugados, luego se multiplica por 100 para sacar el porcentaje.
+*/
 CREATE FUNCTION calcularTasa
 (
 @suma_wins float,
