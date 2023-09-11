@@ -10,7 +10,15 @@ Detalles de uso del programa:
 
 
 Consideraciones:
-	
+	- La funcion sql fue creada desde SQL Server Management Studio, despues se guardo el archivo junto al main,
+	al hacerlo desde ahi quedo funcional, mientras que al intentar hacerla desde python lanzaba errores.
+	Se uso en la opcion 7, para calcular la tasa.
+
+	- Las funciones python se separaron en un archivo aparte y estan importadas al main para mejor orden.
+
+	- Se hizo una "opcion 0" en la que el usuario puede escoger para salir del programa, al igual que en el caso de
+	la funcion mostrar_menu_equipos solo que esta usa la letra "s" para salir.
+
 
 Detalles de las herramientas usadas:
 	- Sistema Operativo (SO):
