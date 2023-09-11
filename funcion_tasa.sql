@@ -6,6 +6,7 @@ calcularTasa
 ————————
 Se calcula la tasa apartir de la suma total de partidos ganados dividido por la
 suma total de partidos jugados, luego se multiplica por 100 para sacar el porcentaje.
+Se retorna float el resultado anterior.
 */
 CREATE FUNCTION calcularTasa
 (

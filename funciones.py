@@ -44,7 +44,7 @@ mostrar_menu_equipos
 conexion: Connection
 ————————
 Toma los nombres de los equipos, los enumera y ordena alfabeticamente, luego los muestra por pantalla y permite escoger uno
-de ellos. Se retorna el equipo escogido.
+de ellos. Se retorna el equipo escogido o 's' en caso de salir.
 '''
 def mostrar_menu_equipos(conexion):
     cursor = conexion.cursor()
@@ -189,6 +189,7 @@ i: int
 Abre el archivo usando ruta, lee cada fila sin contar la primera, corrobora que esté bien escrita
 y hace el query para insertar los datos a la tabla FIFA, se hace un contador de las filas el cual
 incrementa por fila insertada (esto para tener una llave primaria llamada ID, que es el contador).
+Finalmente retorna el contador para los archivos siguientes.
 '''    
 def insertar_datos_FIFA(conexion,ruta,year,i):
     cursor = conexion.cursor()
