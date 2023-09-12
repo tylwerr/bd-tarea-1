@@ -3,7 +3,7 @@ Datos personales:
 	- ROL USM: 202173575-5
 
    	- Nombre: Carlos Andrés Arévalo Guajardo
-    - ROL USM: 202173501-1
+    	- ROL USM: 202173501-1
 	
 
 Detalles de uso del programa:
@@ -18,9 +18,12 @@ Consideraciones:
 	- Se hizo una "opcion 0" en la que el usuario puede escoger para salir del programa, al igual que en el caso de
 	la funcion mostrar_menu_equipos solo que esta usa la letra "s" para salir.
 
-	- En la opcion 5, como el usuario debe ingresar el equipo deseado, decidimos crear un sub-menu mostrando todos los equipos 
+	- En la "opcion 5", como el usuario debe ingresar el equipo deseado, decidimos crear un sub-menu mostrando todos los equipos 
 	disponibles que estan registrados en la base de datos, este menu estara ordenado alfabeticamente, por lo cual ayuda de alguna manera
 	a encontrar al equipo deseado, haciendo mas eficiente la deteccion de errores en esta opcion.
+
+	- En todas las "opciones" se utilizo la libreria pandas, más especificamente la consulta "DataFrame.from_records", para poder mostrar
+	la informacion por pantalla y asi dar una visualizacion más clara de los resultados optenidos.
 	
 Detalles de las herramientas usadas:
 	- Sistema Operativo (SO):
