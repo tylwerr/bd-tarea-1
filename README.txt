@@ -2,12 +2,11 @@ Datos personales:
 	- Nombre: Daniel Rodrigo Maturana Cristino
 	- ROL USM: 202173575-5
 
-   	- Nombre: Carlos Andres Arevalo Guajardo
+   	- Nombre: Carlos Andrés Arévalo Guajardo
     - ROL USM: 202173501-1
 	
 
 Detalles de uso del programa:
-
 
 Consideraciones:
 	- La funcion sql fue creada desde SQL Server Management Studio, despues se guardo el archivo junto al main,
@@ -19,7 +18,10 @@ Consideraciones:
 	- Se hizo una "opcion 0" en la que el usuario puede escoger para salir del programa, al igual que en el caso de
 	la funcion mostrar_menu_equipos solo que esta usa la letra "s" para salir.
 
-
+	- En la opcion 5, como el usuario debe ingresar el equipo deseado, decidimos crear un sub-menu mostrando todos los equipos 
+	disponibles que estan registrados en la base de datos, este menu estara ordenado alfabeticamente, por lo cual ayuda de alguna manera
+	a encontrar al equipo deseado, haciendo mas eficiente la deteccion de errores en esta opcion.
+	
 Detalles de las herramientas usadas:
 	- Sistema Operativo (SO):
 		Edición	Windows 10 Home Single Language
