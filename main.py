@@ -193,56 +193,22 @@ try:
         
         elif respuesta == "9":
             
-            cursor.execute("""
-            SELECT 
-                Campeon AS Equipo,
-                Cantidad
-            FROM (    
-                SELECT TOP 1 
-                    Champion AS Campeon,
-                    COUNT(Champion) AS Cantidad
-                FROM 
-                    SUMMARY
-                GROUP BY 
-                    Champion
-                ORDER BY 
-                    COUNT(Champion) DESC
-                           
-                UNION
-                           
-                SELECT TOP 1 
-                    Runner_up AS Segundo,
-                    COUNT(Runner_up) AS Cantidad
-                FROM 
-                    SUMMARY
-                GROUP BY 
-                    Runner_up
-                ORDER BY 
-                    COUNT(Runner_up) DESC
-                           
-                UNION
-                           
-                SELECT TOP 1 
-                    Third_place AS Tercero,
-                    COUNT(Third_place) AS Cantidad
-                FROM 
-                    SUMMARY
-                GROUP BY 
-                    Third_place
-                ORDER BY 
-                    COUNT(Third_place) DESC
-            ) Equipos  
-            ORDER BY 
-                Cantidad DESC;
+            cursor.execute("""   
+            SELECT TOP 1 Team, COUNT(*) AS Veces_podio
+            FROM (
+                SELECT Champion AS Team FROM SUMMARY
+                UNION ALL
+                SELECT Runner_up AS Team FROM SUMMARY
+                UNION ALL
+                SELECT Third_Place AS Team FROM SUMMARY
+            ) AS Podio
+            GROUP BY Team
+            ORDER BY Veces_podio DESC;
             """)
             
             data = cursor.fetchall()
             podio = pd.DataFrame.from_records(data, columns=["Pais","Veces_en_el_podio"])
-            print("Primer equipo (0) -> Campeon")
-            print("Segundo equipo (1) -> Segundo lugar")
-            print("Tercer equipo (2) -> Tercer lugar")
-            print()
-            print(podio)
+            print(podio.to_string(index=False))
             print('\n')
             
         elif respuesta == "10":
