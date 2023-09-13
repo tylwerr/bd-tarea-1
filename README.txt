@@ -7,8 +7,11 @@ Datos personales:
 	
 
 Detalles de uso del programa:
+	- En la ruta donde se encuentran los archivos, ejecutar el comando "python main.py" para correr el programa.
 
 Consideraciones:
+	- Los archivos csv deben estar en una carpeta llamada "archivos_csv" para posterior lectura de estos.
+
 	- Las tablas fueron creadas con campos NOT NULL, ya que un país si estuvo en el mundial debería tener datos (aunque sean solo 0).
 
 	- La funcion sql fue creada desde SQL Server Management Studio, despues se guardo el archivo junto al main,
@@ -25,7 +28,7 @@ Consideraciones:
 	a encontrar al equipo deseado, haciendo mas eficiente la deteccion de errores en esta opcion.
 
 	- En todas las "opciones" se utilizo la libreria pandas, más especificamente la consulta "DataFrame.from_records", para poder mostrar
-	la informacion por pantalla y asi dar una visualizacion más clara de los resultados optenidos.
+	la informacion por pantalla y asi dar una visualizacion más clara de los resultados obtenidos.
 	
 Detalles de las herramientas usadas:
 	- Sistema Operativo (SO):
