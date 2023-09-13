@@ -56,9 +56,11 @@ def mostrar_menu_equipos(conexion):
     equipos = cursor.fetchall()
     print("Seleccione un equipo segun su numero:")
     
+    contador = 0
     for i, equipo in enumerate(equipos, start=1):
         equipo_str = ', '.join(str(elemento) for elemento in equipo)
         print(f"{i}. {equipo_str}")
+        contador = i
     print('\n')
 
     while True:
@@ -67,7 +69,13 @@ def mostrar_menu_equipos(conexion):
             return 's'
         elif numero_equipo.isdigit():
             numero_equipo = int(numero_equipo)
-            return equipos[numero_equipo-1][0]
+
+            if numero_equipo > 0  and numero_equipo <= contador:
+                return equipos[numero_equipo-1][0]
+            else:
+                print("Opcion no valida")
+                print('\n')
+            
         else:
             print("Opcion no valida")
             print('\n')
