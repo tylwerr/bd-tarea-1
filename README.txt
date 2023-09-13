@@ -9,6 +9,8 @@ Datos personales:
 Detalles de uso del programa:
 
 Consideraciones:
+	- Las tablas fueron creadas con datos NOT NULL, ya que un país si estuvo en el mundial debería tener datos (aunque sean solo 0).
+
 	- La funcion sql fue creada desde SQL Server Management Studio, despues se guardo el archivo junto al main,
 	al hacerlo desde ahi quedo funcional, mientras que al intentar hacerla desde python lanzaba errores.
 	Se uso en la opcion 7, para calcular la tasa.
